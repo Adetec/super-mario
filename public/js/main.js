@@ -15,18 +15,23 @@ const drawBackground = (background, context, sprites )=>{
     });
 }
 
+const loadBackgroundSprites = () => {
+    return loadImage('/images/tiles.png').then(image => {
+        // Image source: https://www.spriters-resource.com/download/52571/
+        const sprites = new SpriteSheet(image, 16,16);
+        sprites.define('ground', 0, 0);
+        sprites.define('sky', 3, 23);
+        return sprites;
+    });
+    
+}
 
 
-
-loadImage('/images/tiles.png').then(image => {
-    // Image source: https://www.spriters-resource.com/download/52571/
-    const sprites = new SpriteSheet(image, 16,16);
-    sprites.define('ground', 0, 0);
-    sprites.define('sky', 3, 23);
-
-    loadLevel('1-1').then(level => {
-        level.backgrounds.forEach(background => {
-            drawBackground(background, context, sprites); 
-        });
+Promise.all([
+    loadBackgroundSprites(),
+    loadLevel('1-1')
+]).then(([sprites, level]) => {
+    level.backgrounds.forEach(background => {
+        drawBackground(background, context, sprites); 
     });
 });
