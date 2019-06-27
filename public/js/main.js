@@ -23,15 +23,25 @@ const loadBackgroundSprites = () => {
         sprites.define('sky', 3, 23);
         return sprites;
     });
-    
 }
 
+const loadMarioSprites = () => {
+    return loadImage('/images/characters.gif').then(image => {
+        // Image source: http://www.mariouniverse.com/wp-content/img/sprites/nes/smb/characters.gif
+        const sprites = new SpriteSheet(image, 16,16);
+        sprites.define('idle', 17, 3);
+        return sprites;
+    });
+}
 
 Promise.all([
     loadBackgroundSprites(),
+    loadMarioSprites(),
     loadLevel('1-1')
-]).then(([sprites, level]) => {
+]).then(([sprites, marioSprite, level]) => {
     level.backgrounds.forEach(background => {
         drawBackground(background, context, sprites); 
     });
+
+    marioSprite.draw('idle', context, 64, 64);
 });
