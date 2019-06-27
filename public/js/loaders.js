@@ -9,4 +9,8 @@ const loadImage = (url) => {
     });
 }
 
-export {loadImage}
+const loadLevel = (level) => {
+    return fetch(`./levels/${level}.json`).then(r => r.json());
+}
+
+export {loadImage, loadLevel};
