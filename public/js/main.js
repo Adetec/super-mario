@@ -22,9 +22,9 @@ Promise.all([
     loadBackgroundSprites(),
     loadMarioSprites(),
     loadLevel('1-1')
-]).then(([sprites, marioSprite, level]) => {
+]).then(([backgroundSprites, marioSprite, level]) => {
     const comp = new Compositor();
-    const backgroundLayer = createBackgroundLayer(level.backgrounds, sprites)
+    const backgroundLayer = createBackgroundLayer(level.backgrounds, backgroundSprites)
     comp.layers.push(backgroundLayer);
 
     let pos = {
