@@ -27,24 +27,53 @@ class Compositor {
     }
 }
 
+const createBackgroundLayer = (backgrounds, sprites) => {
+    const buffer = document.createElement('canvas');
+    buffer.width = 256;
+    buffer.height = 240;
+
+    backgrounds.forEach(background => {
+        drawBackground(background, buffer.getContext('2d'), sprites); 
+    });
+    const drawBackgroundLayer = () => {
+        context.drawImage(buffer, 0, 0);
+    }
+    return drawBackgroundLayer;
+    /* return () => {
+        context.drawImage(buffer, 0, 0);
+    }; */
+}
+
+const createSpriteLayer = (sprite, pos) => {
+    const drawSpriteLayer = (context) => {
+        sprite.draw('idle', context, pos.x, pos.y);
+    }
+    return drawSpriteLayer;
+
+    /* return (context) => {
+    sprite.draw('idle', context, pos.x, pos.y);
+    } */
+}
+
+
 Promise.all([
     loadBackgroundSprites(),
     loadMarioSprites(),
     loadLevel('1-1')
 ]).then(([sprites, marioSprite, level]) => {
-    const backgroundBuffer = document.createElement('canvas');
-    backgroundBuffer.width = 256;
-    backgroundBuffer.height = 240;
-    level.backgrounds.forEach(background => {
-        drawBackground(background, backgroundBuffer.getContext('2d'), sprites); 
-    });
+    const comp = new Compositor();
+    const backgroundLayer = createBackgroundLayer(level.backgrounds, sprites)
+    comp.layers.push(backgroundLayer);
+
     let pos = {
         x: 64,
         y: 64
     }
+    const spriteLayer = createSpriteLayer(marioSprite, pos)
+    comp.layers.push(spriteLayer);
+    console.log(comp.layers);
     let update = () => {
-        context.drawImage(backgroundBuffer, 0, 0);
-        marioSprite.draw('idle', context, pos.x, pos.y);
+        comp.draw(context);
         pos.x += 2;
         pos.y += 2;
         requestAnimationFrame(update);
