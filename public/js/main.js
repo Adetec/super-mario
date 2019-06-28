@@ -1,5 +1,6 @@
 import {loadLevel} from './loaders.js';
 import {loadBackgroundSprites, loadMarioSprites} from './sprites.js';
+import Compositor from './compositor.js';
 // Get the game canvas element
 const canvas = document.getElementById('game-cv');
 const context = canvas.getContext('2d');
@@ -13,18 +14,6 @@ const drawBackground = (background, context, sprites )=>{
             }
         }        
     });
-}
-
-class Compositor {
-    constructor() {
-        this. layers = [];
-    }
-
-    draw(context) {
-        this.layers.forEach(layer => {
-            layer(context);
-        });
-    }
 }
 
 const createBackgroundLayer = (backgrounds, sprites) => {
