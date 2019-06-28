@@ -1,37 +1,10 @@
 import {loadLevel} from './loaders.js';
 import {loadBackgroundSprites, loadMarioSprites} from './sprites.js';
 import Compositor from './compositor.js';
+import {createBackgroundLayer} from './layers.js'
 // Get the game canvas element
 const canvas = document.getElementById('game-cv');
 const context = canvas.getContext('2d');
-
-// Draw background
-const drawBackground = (background, context, sprites )=>{
-    background.ranges.forEach(([x1, x2, y1, y2]) => {
-        for (let x = x1; x < x2; x++) {
-            for (let y = y1; y < y2; y++) {
-                sprites.drawTile(background.tile, context, x, y);  
-            }
-        }        
-    });
-}
-
-const createBackgroundLayer = (backgrounds, sprites) => {
-    const buffer = document.createElement('canvas');
-    buffer.width = 256;
-    buffer.height = 240;
-
-    backgrounds.forEach(background => {
-        drawBackground(background, buffer.getContext('2d'), sprites); 
-    });
-    const drawBackgroundLayer = () => {
-        context.drawImage(buffer, 0, 0);
-    }
-    return drawBackgroundLayer;
-    /* return () => {
-        context.drawImage(buffer, 0, 0);
-    }; */
-}
 
 const createSpriteLayer = (sprite, pos) => {
     const drawSpriteLayer = (context) => {
