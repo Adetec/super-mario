@@ -6,9 +6,9 @@ import {createBackgroundLayer} from './layers.js'
 const canvas = document.getElementById('game-cv');
 const context = canvas.getContext('2d');
 
-const createSpriteLayer = (sprite, pos) => {
+const createSpriteLayer = (entity) => {
     const drawSpriteLayer = (context) => {
-        sprite.draw('idle', context, pos.x, pos.y);
+        entity.draw(context);
     }
     return drawSpriteLayer;
 
@@ -19,9 +19,21 @@ const createSpriteLayer = (sprite, pos) => {
 
 class Vec2 {
     constructor(x, y) {
+        this.set(x, y)
+    }
+    
+    set(x, y) {
         this.x = x;
         this.y = y
     }
+}
+
+class Entity {
+    constructor() {
+        this.pos = new Vec2(0, 0);
+        this.vel = new Vec2(0, 0);
+    }
+
 }
 
 Promise.all([
@@ -34,17 +46,24 @@ Promise.all([
     comp.layers.push(backgroundLayer);
 
     const gravity = 0.5;
+    const mario = new Entity(64, 180, 2, -10);
+    mario.pos.set(64, 180);
+    mario.vel.set(2, -10);
+    mario.draw = function drawMario(context) {
+        marioSprite.draw('idle', context, this.pos.x, this.pos.y);
+    }
+    mario.update = function updateMario() {
+        this.pos.x += this.vel.x;
+        this.pos.y += this.vel.y;
+    }
 
-    let pos = new Vec2(64, 180);
-    let vel = new Vec2(2, -10);
-    const spriteLayer = createSpriteLayer(marioSprite, pos)
+    const spriteLayer = createSpriteLayer(mario)
     comp.layers.push(spriteLayer);
     console.log(comp.layers);
     let update = () => {
         comp.draw(context);
-        pos.x += vel.x;
-        pos.y += vel.y;
-        vel.y += gravity ;
+        mario.update();
+        mario.vel.y += gravity;
         requestAnimationFrame(update);
     }
 
