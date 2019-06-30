@@ -26,4 +26,15 @@ const createBackgroundLayer = (backgrounds, sprites) => {
     }; */
 }
 
-export {createBackgroundLayer};
+const createSpriteLayer = (entity) => {
+    const drawSpriteLayer = (context) => {
+        entity.draw(context);
+    }
+    return drawSpriteLayer;
+
+    /* return (context) => {
+    sprite.draw('idle', context, pos.x, pos.y);
+    } */
+}
+
+export {createBackgroundLayer, createSpriteLayer};
